@@ -134,13 +134,28 @@ d3.json("triples_sentence.json", function(d){
     // console.log(nodes);
     
     // Add new data
-    var test = [["1", "2", "3333"], "123333", 20]
-    data[0].push(test)
-    data[0].push(test)
-    data[0].push(test)
-    data[0].push(test)
+    var testElement = [[["testSrc1111111", "testRlt111111", "testTrt11111"], "testSrctestRlttestTrt", 20] ,]
+    testElement.forEach(element => {
+        link1 = {};
+        link2 = {};
+        link1["source"] = nodes[element[0][0]] || (nodes[element[0][0]] = {"name" : element[0][0]});
+        link1["target"] = nodes[element[0][1]] || (nodes[element[0][1]] = {"name" : element[0][1]});
+        link1["value"] = 0
+        link2["source"] = nodes[element[0][1]] || (nodes[element[0][1]] = {"name" : element[0][1]});
+        link2["target"] = nodes[element[0][2]] || (nodes[element[0][2]] = {"name" : element[0][2]});
+        link2["value"] = 1
+        nodes[element[0][1]]["text"] = element[1]
+        nodes[element[0][1]]["line"] = element[2]
+        nodes[element[0][0]]["type"] = "object"
+        nodes[element[0][1]]["type"] = "relation"
+        nodes[element[0][2]]["type"] = "subject"
+        counter++
+        links.push(link1)
+        links.push(link2)
+    });    
 
-    console.log(data[0])
+    // console.log(data[0][0])
+    
 
     // Configuration data
     var width = 1300,

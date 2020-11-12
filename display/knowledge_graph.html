@@ -107,6 +107,8 @@ d3.json("triples_sentence.json", function(d){
         links.push(link1);
         links.push(link2);
     });    
+
+    
     // show article
     var x = document.createElement("ARTICLE");
     x.setAttribute("id", "myArticle");
@@ -123,9 +125,18 @@ d3.json("triples_sentence.json", function(d){
         i++;
     })
 
-    console.log(links);
-    console.log(nodes);
+    // console.log(links);
+    // console.log(nodes);
     
+    // Add new data
+    var test = [["1", "2", "3333"], "123333", 20]
+    data[0].push(test)
+    data[0].push(test)
+    data[0].push(test)
+    data[0].push(test)
+
+    console.log(data[0])
+
     // Configuration data
     var width = 1300,
         height = 900,

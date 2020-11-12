@@ -71,6 +71,7 @@ text {
     <input type="text" id="objFilter" placeholder="Add object to filter&hellip;">
     <input name="Submit"  type="submit" value="Submit" >
 </form> -->
+<input id="filter_text" type="text" id="objFilter" placeholder="Add object to filter&hellip;">
 <button id="filter_btn">Filter Object</button>
 
 <div id="container1"></div>
@@ -349,7 +350,7 @@ d3.json("triples_sentence.json", function(d){
     let selectedNode = [];
     let dependency = [];
     force.nodes().forEach(function(d){
-        let object_name = "Apple";
+        let object_name = document.getElementById('filter_text').value;
         
         if (d["name"] === object_name){
           selectedNode.push(d)

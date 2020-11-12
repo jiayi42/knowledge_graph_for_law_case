@@ -67,10 +67,11 @@ text {
             <input name="Submit"  type="submit" value="Submit" >
 </form>
 
-<form name="filter_form" onSubmit="filter_object(d)">
+<!-- <form name="filter_form">
     <input type="text" id="objFilter" placeholder="Add object to filter&hellip;">
     <input name="Submit"  type="submit" value="Submit" >
-</form>
+</form> -->
+<button id="filter_btn">Filter Object</button>
 
 <div id="container1"></div>
 <div id="container2"; float:"left"></div>
@@ -129,6 +130,14 @@ d3.json("triples_sentence.json", function(d){
         createSpan("myArticle", lineContext, i);
         i++;
     })
+
+
+    // var btn = document.createElement("BUTTON");   // Create a <button> element
+    // btn.innerHTML = "CLICK ME";                   // Insert text
+    // btn.setAttribute("id", "filter_btn")
+    // document.body.appendChild(btn);  
+
+    document.getElementById("filter_btn").onclick = filter_object;
 
     // console.log(links);
     // console.log(nodes);
@@ -265,12 +274,6 @@ d3.json("triples_sentence.json", function(d){
             return d["name"]
             })  
 
-    svg.append("circle")
-        .attr("cx", width - 3 * 50)
-        .attr("cy", height - 3 * 50)
-        .attr("r", 20)
-        .attr("fill", "black")
-        .on("dblclick", filter_object)
     // add the curvy lines
     function tick() {
         path.attr("d", function(d) {
@@ -338,7 +341,7 @@ d3.json("triples_sentence.json", function(d){
         }
     };
 
-    function filter_object(d) {
+    function filter_object() {
         node.remove()
         path.remove()
          // define the nodes
@@ -391,7 +394,7 @@ node = svg.selectAll(".node")
             .on("start", dragstarted)
             .on("drag", dragged)
             .on("end", dragended))
-            
+
     // add the nodes
     node.append("circle")
         .attr("r", function(d, i){

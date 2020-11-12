@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<script type="text/javascript" src="../lib/d3.v5.min.js"></script>
+<style>
+path{
+  fill: none;
+  stroke: rgb(89, 128, 34);
+  stroke-width: 1.5px;
+}
+
+path.link1{
+  stroke: #666;
+}
+
+path.link0 {
+  stroke: lightcoral;
+}
+
+path.arrow { 
+    fill: black;
+    stroke:black;  
+}
+
+
+
+/* .fixed {
+  stroke: red;  
+  stroke-width: 0.5px;
+  font: 30px sans-serif;
+} */
+
+circle {
+  fill: #ccc;
+  stroke: #fff;
+  stroke: black;
+  stroke-width: 1.5px;
+}
+circle.level1{
+  fill: #faf3dd;
+}
+circle.level2{
+  fill: #64958f;
+}
+circle.level3{
+  fill: #065c6f;
+}
+circle.fixed{
+  stroke: #FFFF00;
+  stroke-width: 5px;
+}
+
+text {
+  fill: #000;
+  font: 12px sans-serif;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+.graph-svg-component {
+    background-color: AliceBlue;
+}
+
+</style>
+<body>
+<div id="container1"></div>
+<div id="container2"; float:"left"></div>
+<script>
+function createSpan(parentId, text, idx){
+    var parent = document.getElementById(parentId);
+    var span_obj = document.createElement("span");
+    span_obj.setAttribute("id","line" + idx);
+    span_obj.innerHTML = text;
+    parent.appendChild(span_obj);
+}
+
+d3.json("triples_sentence.json", function(d){
+    
+}).then((data) => {
+    // Use variable "links" to store the each relation 
+    // Use variable "nodes" to store distinct nodes
+    var links = [];
+    var nodes = {};
+    var counter = 1;
+    data[0].forEach(element => {
+        link1 = {};
+        link2 = {};
+        link1["source"] = nodes[element[0][0]] || (nodes[element[0][0]] = {"name" : element[0][0]});
+        link1["target"] = nodes[element[0][1]] || (nodes[element[0][1]] = {"name" : element[0][1]});
+        link1["value"] = 0
+        link2["source"] = nodes[element[0][1]] || (nodes[element[0][1]] = {"name" : element[0][1]});
+        link2["target"] = nodes[element[0][2]] || (nodes[element[0][2]] = {"name" : element[0][2]});
+        link2["value"] = 1
+        nodes[element[0][1]]["text"] = element[1]
+        nodes[element[0][1]]["line"] = element[2]
+        nodes[element[0][0]]["type"] = "object"
+        nodes[element[0][1]]["type"] = "relation"
+        nodes[element[0][2]]["type"] = "subject"
+        counter++
+        // link["relation"] = nodes[element[0][1]] || (nodes[element[0][1]] = {"name" : element[0][1]});   // might need to modify how to store the "relation" and "text" data
+        // link["relation"] = element[0][1];
+        // link["text"] = element[1];
+        links.push(link1);
+        links.push(link2);
+    });    
+    // show article
+    var x = document.createElement("ARTICLE");
+    x.setAttribute("id", "myArticle");
+    document.getElementById("container2").appendChild(x);
+
+    var heading = document.createElement("H1");
+    var txt1 = document.createTextNode("Case Context");
+    heading.appendChild(txt1);
+    document.getElementById("myArticle").appendChild(heading);
+    
+    i = 0;
+    data[1].forEach(lineContext => {
+        createSpan("myArticle", lineContext, i);
+        i++;
+    })
+
+    console.log(links);
+    console.log(nodes);
+    
+    // Configuration data
+    var width = 1300,
+        height = 900,
+        rScale = d3.scaleLinear().range([5, 35]);
+    var svg = d3.select("#container1").append("svg")
+      .attr("class", "graph-svg-component")
+      .attr("width", width)
+      .attr("height", height)
+      .style("float","left");
+    
+    // Assgin the x,y for each relation based on the width and height
+    var force = d3.forceSimulation()
+    .nodes(d3.values(nodes))
+    .force("link", d3.forceLink(links).distance(50))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force("x", d3.forceX())
+    .force("y", d3.forceY())
+    .force("charge", d3.forceManyBody().strength(-300))
+    .alphaTarget(1)
+    .on("tick", tick);
+
+    // Designed the arrow 
+    svg.append("defs").append("marker")    // This section adds in the arrows
+    .attr("id", "end")
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 20)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("class", "arrow")
+    .attr("d", "M0,-5L10,0L0,5");
+
+    // Add link
+    var path = svg.append("g")
+      .selectAll("path")
+      .data(links)
+      .enter()
+      .append("path")
+      .attr("class", function (d){
+        return "link" + d.value;
+      })
+      .attr("marker-end", "url(#end)");
+
+    // define the nodes
+    var node = svg.selectAll(".node")
+        .data(force.nodes())
+        .enter().append("g")
+        .attr("class", "node")
+        .on("dblclick", dblclick)
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended))
+        
+
+    // var scaleArray = [];   // Store the count of neighbor for every node
+    // links.forEach(function(link) {
+    // var len = links.filter(function(l) {
+    //     return l.source.index == link.index || l.target.index == link.index
+    // });
+    //     scaleArray.push(len.length)  
+    // });
+
+    // rScale.domain([d3.min(scaleArray), d3.max(scaleArray)]);
+
+    // add the nodes
+    node.append("circle")
+        .attr("r", function(d, i){
+            // d.weight = links.filter(function(l) {
+            //     return l.source.index == d.index || l.target.index == d.index
+            // });
+            // d.weight = d.weight.length
+            return 10;
+        })
+        .attr("class", function(d) { // Assign color for "object", "relation", "subject"
+            var level; 
+            if (d["type"] == "object"){
+                level = 1;
+            } else if (d["type"] == "subject") {
+                level = 2;
+            } else {
+                level = 3;
+            }
+            return "level" + level; 
+            });
+
+    // add label
+    node.append("text")
+        .attr("dx", 12)
+        .attr("dy", -10)
+        .text(function(d) {
+            return d["name"]
+            })  
+    // add the curvy lines
+    function tick() {
+        path.attr("d", function(d) {
+            
+            var dx = d.target.x - d.source.x,
+                dy = d.target.y - d.source.y,
+                dr = Math.sqrt(dx * dx + dy * dy);
+            // Comment the code that will show the curvy line
+            // line = "M" +
+            //     d.source.x + "," +
+            //     d.source.y + "A" +
+            //     dr + "," + dr + " 0 0,1 " +
+            //     d.target.x + "," +
+            //     d.target.y;
+            line = "M" + d.source.x + "," + d.source.y +  
+                    "L" + d.target.x + "," + d.target.y;
+            
+            return line;
+        });
+
+        node.attr("transform", function(d) {
+            return "translate(" + d.x + "," + d.y + ")"; 
+        });
+    };
+
+
+    function dblclick(d) {
+        if (d["type"] == "relation"){
+            document.getElementById("line" + d["line"]).setAttribute("style", "background-color: ");
+        }
+        d3.select(this).select("circle")
+        .classed("fixed", false)
+        d.fixed = false;
+        d.fx = null;
+        d.fy = null;
+    }
+    function dragstarted(d) {
+        if (!d3.event.active) force.alphaTarget(0.3).restart();
+        if (d["type"] == "relation"){
+            document.getElementById("line" + d["line"]).setAttribute("style", "background-color: #FFFF00");
+        }
+        d3.select(this).select("circle")
+            .classed("fixed", true);
+        //classed("fixed", true)
+
+        d.fixed = true;
+        d.fx = d.x;
+        d.fy = d.y;
+    };
+
+    function dragged(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+    };
+
+    function dragended(d) {
+        if (!d3.event.active) force.alphaTarget(0);
+        if (d.fixed == true) {
+            d.fx = d.x;
+            d.fy = d.y;
+        }
+        else {
+            d.fx = null;
+            d.fy = null;
+        }
+    };
+
+    
+
+}).catch((err) => {
+    console.log(err);
+});
+</script>
+</body>
+</html>

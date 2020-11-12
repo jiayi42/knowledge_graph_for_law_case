@@ -60,11 +60,12 @@ text {
 
 </style>
 <body>
-<form name="myform" onSubmit="return handleClick()">
-            <input type="text" id="myVal" placeholder="Add subject&hellip;">
+<!-- {% comment %} <form name="myform" onSubmit="return addNewNode()"> {% endcomment %} -->
+<form name="myform" >
+            <input type="text" id="subVal" placeholder="Add subject&hellip;">
             <input type="text" id="relVal" placeholder="Add relation&hellip;">
             <input type="text" id="objVal" placeholder="Add object&hellip;">
-            <input name="Submit"  type="submit" value="Submit" >
+            <input name="submit" id="submitNewNodeBtn" type="button" value="Submit" >
 </form>
 
 <!-- <form name="filter_form">
@@ -164,7 +165,47 @@ d3.json("triples_sentence.json", function(d){
         links.push(link2)
     });    
 
-    // console.log(data[0][0])
+    // Builder click listener
+    var submitNewNode = d3.select("#submitNewNodeBtn");
+        submitNewNode.on("click", function () {
+        addNewNode()
+    });
+
+    // Add new node function
+    var newNodeIdx = data[0].length + 1
+    // function addNewNode(event) {
+    function addNewNode() {
+        // event.preventDefault()
+        
+        var subVal = document.getElementById("subVal").value
+        var relVal = document.getElementById("relVal").value
+        var objVal = document.getElementById("objVal").value
+        var newNodeList = [[[subVal, relVal, objVal], subVal+relVal+objVal, newNodeIdx] ,]
+        data[0].push(newNodeList)
+
+        newNodeList.forEach(element => {
+            link1 = {};
+            link2 = {};
+            link1["source"] = nodes[element[0][0]] || (nodes[element[0][0]] = {"name" : element[0][0]});
+            link1["target"] = nodes[element[0][1]] || (nodes[element[0][1]] = {"name" : element[0][1]});
+            link1["value"] = 0
+            link2["source"] = nodes[element[0][1]] || (nodes[element[0][1]] = {"name" : element[0][1]});
+            link2["target"] = nodes[element[0][2]] || (nodes[element[0][2]] = {"name" : element[0][2]});
+            link2["value"] = 1
+            nodes[element[0][1]]["text"] = element[1]
+            nodes[element[0][1]]["line"] = element[2]
+            nodes[element[0][0]]["type"] = "object"
+            nodes[element[0][1]]["type"] = "relation"
+            nodes[element[0][2]]["type"] = "subject"
+            counter++
+            links.push(link1)
+            links.push(link2)
+        });    
+        console.log("After submit data[0]: ", data[0])
+
+        return false;
+    }
+    console.log("data[0]: ", data[0])
     
 
     // Configuration data

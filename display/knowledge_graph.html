@@ -67,6 +67,11 @@ text {
             <input name="Submit"  type="submit" value="Submit" >
 </form>
 
+<form name="filter_form" onSubmit="filter_object(d)">
+    <input type="text" id="objFilter" placeholder="Add object to filter&hellip;">
+    <input name="Submit"  type="submit" value="Submit" >
+</form>
+
 <div id="container1"></div>
 <div id="container2"; float:"left"></div>
 <script>
@@ -158,6 +163,18 @@ d3.json("triples_sentence.json", function(d){
     .alphaTarget(1)
     .on("tick", tick);
 
+    // Create table for lookup nodes and links
+    var nodes_table = {}
+    force.nodes().forEach(function(d){
+      nodes_table[d["name"]] = d
+    })
+    var links_table = {}
+    links.forEach(function(d){
+      links_table[d["target"]["name"]] = d
+    })
+
+
+
     // Designed the arrow 
     svg.append("defs").append("marker")    // This section adds in the arrows
     .attr("id", "end")
@@ -232,6 +249,13 @@ d3.json("triples_sentence.json", function(d){
         .text(function(d) {
             return d["name"]
             })  
+
+    svg.append("circle")
+        .attr("cx", width - 3 * 50)
+        .attr("cy", height - 3 * 50)
+        .attr("r", 20)
+        .attr("fill", "black")
+        .on("dblclick", filter_object)
     // add the curvy lines
     function tick() {
         path.attr("d", function(d) {
@@ -299,6 +323,91 @@ d3.json("triples_sentence.json", function(d){
         }
     };
 
+    function filter_object(d) {
+        node.remove()
+        path.remove()
+         // define the nodes
+
+    let selectedNode = [];
+    let dependency = [];
+    force.nodes().forEach(function(d){
+        let object_name = "Apple";
+        
+        if (d["name"] === object_name){
+          selectedNode.push(d)
+          data[0].forEach(function(d){
+            if(d[0][0] === object_name){
+              dependency.push(d[0][1]);
+              dependency.push(d[0][2])
+            }
+          })
+        }
+    })  
+    console.log(dependency);
+    dependency.forEach(function(d){
+        selectedNode.push(nodes_table[d]);
+    })
+    console.log(selectedNode)
+    
+
+            let selected_links = []
+
+selectedNode.forEach(function(d){
+  if (d["name"] in links_table){
+    selected_links.push(links_table[d["name"]])
+  }
+})
+path = svg.append("g")
+.selectAll("path")
+.data(selected_links)
+.enter()
+.append("path")
+.attr("class", function (d){
+  return "link" + d.value;
+})
+.attr("marker-end", "url(#end)");
+
+node = svg.selectAll(".node")
+        .data(selectedNode)
+        .enter().append("g")
+        .attr("class", "node")
+        .on("dblclick", dblclick)
+        .call(d3.drag()
+            .on("start", dragstarted)
+            .on("drag", dragged)
+            .on("end", dragended))
+            
+    // add the nodes
+    node.append("circle")
+        .attr("r", function(d, i){
+            // d.weight = links.filter(function(l) {
+            //     return l.source.index == d.index || l.target.index == d.index
+            // });
+            // d.weight = d.weight.length
+            return 10;
+        })
+        .attr("class", function(d) { // Assign color for "object", "relation", "subject"
+            var level; 
+            if (d["type"] == "object"){
+                level = 1;
+            } else if (d["type"] == "subject") {
+                level = 2;
+            } else {
+                level = 3;
+            }
+            return "level" + level; 
+            });
+      
+      
+
+    // add label
+    node.append("text")
+        .attr("dx", 12)
+        .attr("dy", -10)
+        .text(function(d) {
+            return d["name"]
+            })  
+    }
     
 
 }).catch((err) => {

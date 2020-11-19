@@ -47,6 +47,21 @@ circle.fixed{
   stroke-width: 5px;
 }
 
+#container1{
+  height: 900px;
+  width: 70%;
+  float: left;
+  background-color: AliceBlue;
+  overflow: hidden;
+}
+
+#container2{
+  height: 900px;
+  width: 28%;
+  float: left;
+  padding-left: 20px;
+}
+
 text {
   fill: #000;
   font: 12px sans-serif;
@@ -72,8 +87,12 @@ text {
     <input type="text" id="objFilter" placeholder="Add object to filter&hellip;">
     <input name="Submit"  type="submit" value="Submit" >
 </form> -->
-<input id="filter_text" type="text" id="objFilter" placeholder="Add object to filter&hellip;">
-<button id="filter_btn">Filter Object</button>
+
+<div>
+    <input id="filter_text" type="text" id="objFilter" placeholder="Add object to filter&hellip;">
+    <button id="filter_btn">Filter Object</button>
+</div>
+
 
 <div id="container1"></div>
 <div id="container2"; float:"left"></div>
@@ -209,8 +228,9 @@ d3.json("triples_sentence.json", function(d){
     
 
     // Configuration data
-    var width = 1300,
-        height = 900,
+    var c1 = document.getElementById("container1")
+    var width = c1.offsetWidth,
+        height = c1.offsetHeight,
         rScale = d3.scaleLinear().range([5, 35]);
     var svg = d3.select("#container1").append("svg")
       .attr("class", "graph-svg-component")

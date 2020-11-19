@@ -217,6 +217,10 @@ d3.json("triples_sentence.json", function(d){
       .attr("width", width)
       .attr("height", height)
       .style("float","left");
+    const g = svg.append("g")
+    svg.call(d3.zoom().on("zoom", function () {
+       g.attr("transform", d3.event.transform)
+    }))
     
     // Assgin the x,y for each relation based on the width and height
     var force = d3.forceSimulation()
@@ -242,7 +246,7 @@ d3.json("triples_sentence.json", function(d){
 
 
     // Designed the arrow 
-    svg.append("defs").append("marker")    // This section adds in the arrows
+    g.append("defs").append("marker")    // This section adds in the arrows
     .attr("id", "end")
     .attr("viewBox", "0 -5 10 10")
     .attr("refX", 20)
@@ -255,7 +259,7 @@ d3.json("triples_sentence.json", function(d){
     .attr("d", "M0,-5L10,0L0,5");
 
     // Add link
-    var path = svg.append("g")
+    var path = g.append("g")
       .selectAll("path")
       .data(links)
       .enter()
@@ -266,7 +270,7 @@ d3.json("triples_sentence.json", function(d){
       .attr("marker-end", "url(#end)");
 
     // define the nodes
-    var node = svg.selectAll(".node")
+    var node = g.selectAll(".node")
         .data(force.nodes())
         .enter().append("g")
         .attr("class", "node")
@@ -275,25 +279,10 @@ d3.json("triples_sentence.json", function(d){
             .on("start", dragstarted)
             .on("drag", dragged)
             .on("end", dragended))
-        
-
-    // var scaleArray = [];   // Store the count of neighbor for every node
-    // links.forEach(function(link) {
-    // var len = links.filter(function(l) {
-    //     return l.source.index == link.index || l.target.index == link.index
-    // });
-    //     scaleArray.push(len.length)  
-    // });
-
-    // rScale.domain([d3.min(scaleArray), d3.max(scaleArray)]);
 
     // add the nodes
     node.append("circle")
         .attr("r", function(d, i){
-            // d.weight = links.filter(function(l) {
-            //     return l.source.index == d.index || l.target.index == d.index
-            // });
-            // d.weight = d.weight.length
             return 10;
         })
         .attr("class", function(d) { // Assign color for "object", "relation", "subject"
@@ -316,20 +305,13 @@ d3.json("triples_sentence.json", function(d){
             return d["name"]
             })  
 
-    // add the curvy lines
+    // add the straight lines
     function tick() {
         path.attr("d", function(d) {
-            
             var dx = d.target.x - d.source.x,
                 dy = d.target.y - d.source.y,
                 dr = Math.sqrt(dx * dx + dy * dy);
-            // Comment the code that will show the curvy line
-            // line = "M" +
-            //     d.source.x + "," +
-            //     d.source.y + "A" +
-            //     dr + "," + dr + " 0 0,1 " +
-            //     d.target.x + "," +
-            //     d.target.y;
+                
             line = "M" + d.source.x + "," + d.source.y +  
                     "L" + d.target.x + "," + d.target.y;
             
@@ -409,25 +391,24 @@ d3.json("triples_sentence.json", function(d){
     })
     console.log(selectedNode)
     
+    let selected_links = []
 
-            let selected_links = []
+    selectedNode.forEach(function(d){
+    if (d["name"] in links_table){
+        selected_links.push(links_table[d["name"]])
+    }
+    })
+    path = g.append("g")
+    .selectAll("path")
+    .data(selected_links)
+    .enter()
+    .append("path")
+    .attr("class", function (d){
+      return "link" + d.value;
+    })
+    .attr("marker-end", "url(#end)");
 
-selectedNode.forEach(function(d){
-  if (d["name"] in links_table){
-    selected_links.push(links_table[d["name"]])
-  }
-})
-path = svg.append("g")
-.selectAll("path")
-.data(selected_links)
-.enter()
-.append("path")
-.attr("class", function (d){
-  return "link" + d.value;
-})
-.attr("marker-end", "url(#end)");
-
-node = svg.selectAll(".node")
+    node = g.selectAll(".node")
         .data(selectedNode)
         .enter().append("g")
         .attr("class", "node")

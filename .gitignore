@@ -1,0 +1,8 @@
+.DS_Store
+article_background.txt
+case_text/
+chromedriver
+get_background_from_text.py
+ggininder.txt
+scrape_for_casetext.py
+search_result.txt

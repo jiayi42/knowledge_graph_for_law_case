@@ -109,9 +109,14 @@ function createSpan(parentId, text, idx){
     parent.appendChild(span_obj);
 }
 
-d3.json("triples_sentence.json", function(d){
+// Promise.all to load multiple data
+Promise.all(
+    [d3.json("triples_sentence.json"),  // file[0]
+    d3.json("file_topic.json"),         // file[1]
+    ]).then((files) => {            
     
-}).then((data) => {
+    data = files[0]     
+
     // Use variable "links" to store the each relation 
     // Use variable "nodes" to store distinct nodes
     var links = [];

@@ -156,7 +156,6 @@
                 links.push(link2);
             });
 
-
             // show article
             var x = document.createElement("ARTICLE");
             x.setAttribute("id", "myArticle");
@@ -173,16 +172,8 @@
                 i++;
             })
 
-
-            // var btn = document.createElement("BUTTON");   // Create a <button> element
-            // btn.innerHTML = "CLICK ME";                   // Insert text
-            // btn.setAttribute("id", "filter_btn")
-            // document.body.appendChild(btn);  
-
+        
             document.getElementById("filter_btn").onclick = filter_object;
-
-            // console.log(links);
-            // console.log(nodes);
 
             // Add new data
             var testElement = [
@@ -304,249 +295,545 @@
             }
             // console.log("data[0]: ", data[0])
 
+// <<<<<<< HEAD Before
 
-            // Configuration data
-            var c1 = document.getElementById("container1")
-            var width = c1.offsetWidth,
-                height = c1.offsetHeight,
-                rScale = d3.scaleLinear().range([5, 35]);
-            var svg = d3.select("#container1").append("svg")
-                .attr("class", "graph-svg-component")
-                .attr("width", width)
-                .attr("height", height)
-                .style("float", "left");
-            const g = svg.append("g")
-            svg.call(d3.zoom().on("zoom", function() {
-                g.attr("transform", d3.event.transform)
-            }))
 
-            // Assgin the x,y for each relation based on the width and height
-            var force = d3.forceSimulation()
-                .nodes(d3.values(nodes))
-                .force("link", d3.forceLink(links).distance(50))
-                .force('center', d3.forceCenter(width / 2, height / 2))
-                .force("x", d3.forceX())
-                .force("y", d3.forceY())
-                .force("charge", d3.forceManyBody().strength(-300))
-                .alphaTarget(1)
-                .on("tick", tick);
 
-            // Create table for lookup nodes and links
-            var nodes_table = {}
-            force.nodes().forEach(function(d) {
-                nodes_table[d["name"]] = d
+//             // Configuration data
+//             var c1 = document.getElementById("container1")
+//             var width = c1.offsetWidth,
+//                 height = c1.offsetHeight,
+//                 rScale = d3.scaleLinear().range([5, 35]);
+//             var svg = d3.select("#container1").append("svg")
+//                 .attr("class", "graph-svg-component")
+//                 .attr("width", width)
+//                 .attr("height", height)
+//                 .style("float", "left");
+//             const g = svg.append("g")
+//             svg.call(d3.zoom().on("zoom", function() {
+//                 g.attr("transform", d3.event.transform)
+//             }))
+
+//             // Assgin the x,y for each relation based on the width and height
+//             var force = d3.forceSimulation()
+//                 .nodes(d3.values(nodes))
+//                 .force("link", d3.forceLink(links).distance(50))
+//                 .force('center', d3.forceCenter(width / 2, height / 2))
+//                 .force("x", d3.forceX())
+//                 .force("y", d3.forceY())
+//                 .force("charge", d3.forceManyBody().strength(-300))
+//                 .alphaTarget(1)
+//                 .on("tick", tick);
+
+//             // Create table for lookup nodes and links
+//             var nodes_table = {}
+//             force.nodes().forEach(function(d) {
+//                 nodes_table[d["name"]] = d
+//             })
+//             var links_table = {}
+//             links.forEach(function(d) {
+//                 links_table[d["target"]["name"]] = d
+//             })
+
+
+
+//             // Designed the arrow ddf
+//             g.append("defs").append("marker") // This section adds in the arrows
+//                 .attr("id", "end")
+//                 .attr("viewBox", "0 -5 10 10")
+//                 .attr("refX", 20)
+//                 .attr("refY", -1.5)
+//                 .attr("markerWidth", 6)
+//                 .attr("markerHeight", 6)
+//                 .attr("orient", "auto")
+//                 .append("path")
+//                 .attr("class", "arrow")
+//                 .attr("d", "M0,-5L10,0L0,5");
+
+//             // Add link
+//             var path = g.append("g")
+//                 .selectAll("path")
+//                 .data(links)
+//                 .enter()
+//                 .append("path")
+//                 .attr("class", function(d) {
+//                     return "link" + d.value;
+//                 })
+//                 .attr("marker-end", "url(#end)");
+
+//             // define the nodes
+//             var node = g.selectAll(".node")
+//                 .data(force.nodes())
+//                 .enter().append("g")
+//                 .attr("class", "node")
+//                 .on("dblclick", dblclick)
+//                 .call(d3.drag()
+//                     .on("start", dragstarted)
+//                     .on("drag", dragged)
+//                     .on("end", dragended))
+
+//             // add the nodes
+//             node.append("circle")
+//                 .attr("r", function(d, i) {
+//                     return 10;
+//                 })
+//                 .attr("class", function(d) { // Assign color for "object", "relation", "subject"
+//                     var level;
+//                     if (d["type"] == "object") {
+//                         level = 1;
+//                     } else if (d["type"] == "subject") {
+//                         level = 2;
+//                     } else {
+//                         level = 3;
+//                     }
+//                     return "level" + level;
+//                 });
+
+//             // add label
+//             node.append("text")
+//                 .attr("dx", 12)
+//                 .attr("dy", -10)
+//                 .text(function(d) {
+//                     return d["name"]
+//                 })
+
+//             // add the straight lines
+//             function tick() {
+//                 path.attr("d", function(d) {
+//                     var dx = d.target.x - d.source.x,
+//                         dy = d.target.y - d.source.y,
+//                         dr = Math.sqrt(dx * dx + dy * dy);
+
+//                     line = "M" + d.source.x + "," + d.source.y +
+//                         "L" + d.target.x + "," + d.target.y;
+
+//                     return line;
+//                 });
+
+//                 node.attr("transform", function(d) {
+//                     return "translate(" + d.x + "," + d.y + ")";
+//                 });
+//             };
+
+
+//             function dblclick(d) {
+//                 if (d["type"] == "relation") {
+//                     document.getElementById("line" + d["line"]).setAttribute("style", "background-color: ");
+//                 }
+//                 d3.select(this).select("circle")
+//                     .classed("fixed", false)
+//                 d.fixed = false;
+//                 d.fx = null;
+//                 d.fy = null;
+//             }
+
+//             function dragstarted(d) {
+//                 if (!d3.event.active) force.alphaTarget(0.3).restart();
+//                 if (d["type"] == "relation") {
+//                     document.getElementById("line" + d["line"]).setAttribute("style", "background-color: #FFFF00");
+//                 }
+//                 d3.select(this).select("circle")
+//                     .classed("fixed", true);
+//                 //classed("fixed", true)
+
+//                 d.fixed = true;
+//                 d.fx = d.x;
+//                 d.fy = d.y;
+//             };
+
+//             function dragged(d) {
+//                 d.fx = d3.event.x;
+//                 d.fy = d3.event.y;
+//             };
+
+//             function dragended(d) {
+//                 if (!d3.event.active) force.alphaTarget(0);
+//                 if (d.fixed == true) {
+//                     d.fx = d.x;
+//                     d.fy = d.y;
+//                 } else {
+//                     d.fx = null;
+//                     d.fy = null;
+//                 }
+//             };
+
+//             function filter_object() {
+//                 node.remove()
+//                 path.remove()
+//                     // define the nodes
+
+//                 let selectedNode = [];
+//                 let dependency = [];
+//                 force.nodes().forEach(function(d) {
+//                     let object_name = document.getElementById('filter_text').value;
+
+//                     if (d["name"] === object_name) {
+//                         selectedNode.push(d)
+//                         data[0].forEach(function(d) {
+//                             if (d[0][0] === object_name) {
+//                                 dependency.push(d[0][1]);
+//                                 dependency.push(d[0][2])
+//                             }
+//                         })
+//                     }
+//                 })
+//                 console.log(dependency);
+//                 dependency.forEach(function(d) {
+//                     selectedNode.push(nodes_table[d]);
+//                 })
+//                 console.log(selectedNode)
+
+//                 let selected_links = []
+
+//                 selectedNode.forEach(function(d) {
+//                     if (d["name"] in links_table) {
+//                         selected_links.push(links_table[d["name"]])
+//                     }
+//                 })
+//                 path = g.append("g")
+//                     .selectAll("path")
+//                     .data(selected_links)
+//                     .enter()
+//                     .append("path")
+//                     .attr("class", function(d) {
+//                         return "link" + d.value;
+//                     })
+//                     .attr("marker-end", "url(#end)");
+
+//                 node = g.selectAll(".node")
+//                     .data(selectedNode)
+//                     .enter().append("g")
+//                     .attr("class", "node")
+//                     .on("dblclick", dblclick)
+//                     .call(d3.drag()
+//                         .on("start", dragstarted)
+//                         .on("drag", dragged)
+//                         .on("end", dragended))
+
+//                 // add the nodes
+//                 node.append("circle")
+//                     .attr("r", function(d, i) {
+//                         // d.weight = links.filter(function(l) {
+//                         //     return l.source.index == d.index || l.target.index == d.index
+//                         // });
+//                         // d.weight = d.weight.length
+//                         return 10;
+//                     })
+//                     .attr("class", function(d) { // Assign color for "object", "relation", "subject"
+//                         var level;
+//                         if (d["type"] == "object") {
+//                             level = 1;
+//                         } else if (d["type"] == "subject") {
+//                             level = 2;
+//                         } else {
+//                             level = 3;
+//                         }
+//                         return "level" + level;
+//                     });
+
+
+
+//                 // add label
+//                 node.append("text")
+//                     .attr("dx", 12)
+//                     .attr("dy", -10)
+//                     .text(function(d) {
+//                         return d["name"]
+//                     })
+//             }
+// ======= Before
+// 
+
+    // Configuration data
+    var c1 = document.getElementById("container1")
+    var width = c1.offsetWidth,
+        height = c1.offsetHeight,
+        rScale = d3.scaleLinear().range([5, 35]);
+    var svg = d3.select("#container1").append("svg")
+      .attr("class", "graph-svg-component")
+      .attr("width", width)
+      .attr("height", height)
+      .style("float","left");
+    var g = svg.append("g")
+    svg.call(d3.zoom().on("zoom", function () {
+       g.attr("transform", d3.event.transform)
+    })).on("dblclick.zoom", null);
+    
+    // ###################################################################################################
+    function draw_from_node_path(nodes, links){
+        var force = d3.forceSimulation()
+            .nodes(d3.values(nodes))
+            .force("link", d3.forceLink(links).distance(50))
+            .force('center', d3.forceCenter(width / 2, height / 2))
+            .force("x", d3.forceX())
+            .force("y", d3.forceY())
+            .force("charge", d3.forceManyBody().strength(-300))
+            .alphaTarget(1)
+            .on("tick", ()=>{tick(path, node)});
+        
+        var path = g.append("g")
+            .selectAll("path")
+            .data(links)
+            .enter()
+            .append("path")
+            .attr("class", function (d){
+                return "link" + d.value;
             })
-            var links_table = {}
-            links.forEach(function(d) {
-                links_table[d["target"]["name"]] = d
+            .attr("marker-end", "url(#end)");
+        
+        var node = g.selectAll(".node")
+            .data(force.nodes())
+            .enter().append("g")
+            .attr("class", "node")
+            .on("dblclick", dblclick)
+            .call(d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended))
+
+        // add the nodes
+        node.append("circle")
+            .attr("r", function(d, i){
+                return 10;
             })
-
-
-
-            // Designed the arrow ddf
-            g.append("defs").append("marker") // This section adds in the arrows
-                .attr("id", "end")
-                .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 20)
-                .attr("refY", -1.5)
-                .attr("markerWidth", 6)
-                .attr("markerHeight", 6)
-                .attr("orient", "auto")
-                .append("path")
-                .attr("class", "arrow")
-                .attr("d", "M0,-5L10,0L0,5");
-
-            // Add link
-            var path = g.append("g")
-                .selectAll("path")
-                .data(links)
-                .enter()
-                .append("path")
-                .attr("class", function(d) {
-                    return "link" + d.value;
-                })
-                .attr("marker-end", "url(#end)");
-
-            // define the nodes
-            var node = g.selectAll(".node")
-                .data(force.nodes())
-                .enter().append("g")
-                .attr("class", "node")
-                .on("dblclick", dblclick)
-                .call(d3.drag()
-                    .on("start", dragstarted)
-                    .on("drag", dragged)
-                    .on("end", dragended))
-
-            // add the nodes
-            node.append("circle")
-                .attr("r", function(d, i) {
-                    return 10;
-                })
-                .attr("class", function(d) { // Assign color for "object", "relation", "subject"
-                    var level;
-                    if (d["type"] == "object") {
-                        level = 1;
-                    } else if (d["type"] == "subject") {
-                        level = 2;
-                    } else {
-                        level = 3;
-                    }
-                    return "level" + level;
-                });
-
-            // add label
-            node.append("text")
-                .attr("dx", 12)
-                .attr("dy", -10)
-                .text(function(d) {
-                    return d["name"]
-                })
-
-            // add the straight lines
-            function tick() {
-                path.attr("d", function(d) {
-                    var dx = d.target.x - d.source.x,
-                        dy = d.target.y - d.source.y,
-                        dr = Math.sqrt(dx * dx + dy * dy);
-
-                    line = "M" + d.source.x + "," + d.source.y +
-                        "L" + d.target.x + "," + d.target.y;
-
-                    return line;
-                });
-
-                node.attr("transform", function(d) {
-                    return "translate(" + d.x + "," + d.y + ")";
-                });
-            };
-
-
-            function dblclick(d) {
-                if (d["type"] == "relation") {
-                    document.getElementById("line" + d["line"]).setAttribute("style", "background-color: ");
+            .attr("class", function(d) { // Assign color for "object", "relation", "subject"
+                var level; 
+                if (d["type"] == "object"){
+                    level = 1;
+                } else if (d["type"] == "subject") {
+                    level = 2;
+                } else {
+                    level = 3;
                 }
-                d3.select(this).select("circle")
-                    .classed("fixed", false)
-                d.fixed = false;
+                return "level" + level; 
+                });
+
+        // add label
+        node.append("text")
+            .attr("dx", 12)
+            .attr("dy", -10)
+            .text(function(d) {
+                return d["name"]
+            })  
+
+        function dblclick(d) {
+            if (d["type"] == "relation"){
+                document.getElementById("line" + d["line"]).setAttribute("style", "background-color: ");
+            }
+            d3.select(this).select("circle")
+            .classed("fixed", false)
+            d.fixed = false;
+            d.fx = null;
+            d.fy = null;
+        }
+        function dragstarted(d) {
+            if (!d3.event.active) force.alphaTarget(0.3).restart();
+            if (d["type"] == "relation"){
+                document.getElementById("line" + d["line"]).setAttribute("style", "background-color: #FFFF00");
+            }
+            d3.select(this).select("circle")
+                .classed("fixed", true);
+            //classed("fixed", true)
+
+            d.fixed = true;
+            d.fx = d.x;
+            d.fy = d.y;
+        };
+
+        function dragged(d) {
+            d.fx = d3.event.x;
+            d.fy = d3.event.y;
+        };
+
+        function dragended(d) {
+            if (!d3.event.active) force.alphaTarget(0);
+            if (d.fixed == true) {
+                d.fx = d.x;
+                d.fy = d.y;
+            }
+            else {
                 d.fx = null;
                 d.fy = null;
             }
+        };
 
-            function dragstarted(d) {
-                if (!d3.event.active) force.alphaTarget(0.3).restart();
-                if (d["type"] == "relation") {
-                    document.getElementById("line" + d["line"]).setAttribute("style", "background-color: #FFFF00");
-                }
-                d3.select(this).select("circle")
-                    .classed("fixed", true);
-                //classed("fixed", true)
+        return_val = [force, node, path];
+        return return_val;
+    }
+    // ###################################################################################################
+    
+    var return_val = null;
+    return_val = draw_from_node_path(nodes, links)
+    var force = return_val[0];
+    var node = return_val[1];
+    var path = return_val[2];
+    
+    // Designed the arrow 
+    g.append("defs").append("marker")    // This section adds in the arrows
+    .attr("id", "end")
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 20)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+    .append("path")
+    .attr("class", "arrow")
+    .attr("d", "M0,-5L10,0L0,5");
 
-                d.fixed = true;
-                d.fx = d.x;
-                d.fy = d.y;
-            };
+    // add the straight lines
+    function tick(path, node) {
+            path.attr("d", function(d) {
+                var dx = d.target.x - d.source.x,
+                    dy = d.target.y - d.source.y,
+                    dr = Math.sqrt(dx * dx + dy * dy);
+                    
+                line = "M" + d.source.x + "," + d.source.y +  
+                        "L" + d.target.x + "," + d.target.y;
+                
+                return line;
+            });
 
-            function dragged(d) {
-                d.fx = d3.event.x;
-                d.fy = d3.event.y;
-            };
+            node.attr("transform", function(d) {
+                return "translate(" + d.x + "," + d.y + ")"; 
+            });
+    };
 
-            function dragended(d) {
-                if (!d3.event.active) force.alphaTarget(0);
-                if (d.fixed == true) {
-                    d.fx = d.x;
-                    d.fy = d.y;
-                } else {
-                    d.fx = null;
-                    d.fy = null;
-                }
-            };
+    
+    
 
-            function filter_object() {
-                node.remove()
-                path.remove()
-                    // define the nodes
-
-                let selectedNode = [];
-                let dependency = [];
-                force.nodes().forEach(function(d) {
-                    let object_name = document.getElementById('filter_text').value;
-
-                    if (d["name"] === object_name) {
-                        selectedNode.push(d)
-                        data[0].forEach(function(d) {
-                            if (d[0][0] === object_name) {
-                                dependency.push(d[0][1]);
-                                dependency.push(d[0][2])
-                            }
-                        })
-                    }
-                })
-                console.log(dependency);
-                dependency.forEach(function(d) {
-                    selectedNode.push(nodes_table[d]);
-                })
-                console.log(selectedNode)
-
-                let selected_links = []
-
-                selectedNode.forEach(function(d) {
-                    if (d["name"] in links_table) {
-                        selected_links.push(links_table[d["name"]])
-                    }
-                })
-                path = g.append("g")
-                    .selectAll("path")
-                    .data(selected_links)
-                    .enter()
-                    .append("path")
-                    .attr("class", function(d) {
-                        return "link" + d.value;
-                    })
-                    .attr("marker-end", "url(#end)");
-
-                node = g.selectAll(".node")
-                    .data(selectedNode)
-                    .enter().append("g")
-                    .attr("class", "node")
-                    .on("dblclick", dblclick)
-                    .call(d3.drag()
-                        .on("start", dragstarted)
-                        .on("drag", dragged)
-                        .on("end", dragended))
-
-                // add the nodes
-                node.append("circle")
-                    .attr("r", function(d, i) {
-                        // d.weight = links.filter(function(l) {
-                        //     return l.source.index == d.index || l.target.index == d.index
-                        // });
-                        // d.weight = d.weight.length
-                        return 10;
-                    })
-                    .attr("class", function(d) { // Assign color for "object", "relation", "subject"
-                        var level;
-                        if (d["type"] == "object") {
-                            level = 1;
-                        } else if (d["type"] == "subject") {
-                            level = 2;
-                        } else {
-                            level = 3;
-                        }
-                        return "level" + level;
-                    });
+    
+    var count = 0
 
 
+    function filter_object() {
+        let object_name = document.getElementById('filter_text').value;
 
-                // add label
-                node.append("text")
-                    .attr("dx", 12)
-                    .attr("dy", -10)
-                    .text(function(d) {
-                        return d["name"]
-                    })
+        // new_nodes and new_links are the remaining nodes and links after filtering
+        new_nodes = {}
+        new_links = []
+        links.forEach(function(d){
+            if (d["source"]["name"] == "Apple" || d["source"]["name"] == "sued April 15"){
+                new_links.push(d)
             }
+        })
+        var nodes_keys = Object.keys(nodes);
+        nodes_keys.forEach(function(d){
+            if (d == "Apple" || d == "sued April 15" || d == "(Samsung)"){
+                new_nodes[d] = nodes[d]
+            }
+        })
+        console.log(new_links)
+        console.log(new_nodes)
+        console.log(object_name)
+        // console.log(links)
+        
+        // 
+        g.remove()
+        g = svg.append("g")
+        g.append("defs").append("marker")    // This section adds in the arrows
+            .attr("id", "end")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 20)
+            .attr("refY", -1.5)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("class", "arrow")
+            .attr("d", "M0,-5L10,0L0,5");
+            
+        draw_from_node_path(new_nodes, new_links)
+
+
+        
+        // node.remove()
+        // path.remove()
+        
+
+         // define the nodes
+
+    // let selectedNode = [];
+    // let dependency = [];
+    // force.nodes().forEach(function(d){
+    //     let object_name = document.getElementById('filter_text').value;
+        
+    //     if (d["name"] === object_name){
+    //       selectedNode.push(d)
+    //       data[0].forEach(function(d){
+    //         if(d[0][0] === object_name){
+    //           dependency.push(d[0][1]);
+    //           dependency.push(d[0][2])
+    //         }
+    //       })
+    //     }
+    // })  
+    // console.log(dependency);
+    // dependency.forEach(function(d){
+    //     selectedNode.push(nodes_table[d]);
+    // })
+    // console.log(selectedNode)
+    
+    // let selected_links = []
+
+    // selectedNode.forEach(function(d){
+    // if (d["name"] in links_table){
+    //     selected_links.push(links_table[d["name"]])
+    // }
+    // })
+    // path = g.append("g")
+    // .selectAll("path")
+    // .data(selected_links)
+    // .enter()
+    // .append("path")
+    // .attr("class", function (d){
+    //   return "link" + d.value;
+    // })
+    // .attr("marker-end", "url(#end)");
+
+    // node = g.selectAll(".node")
+    //     .data(selectedNode)
+    //     .enter().append("g")
+    //     .attr("class", "node")
+    //     .on("dblclick", dblclick)
+    //     .call(d3.drag()
+    //         .on("start", dragstarted)
+    //         .on("drag", dragged)
+    //         .on("end", dragended))
+
+    // // add the nodes
+    // node.append("circle")
+    //     .attr("r", function(d, i){
+    //         // d.weight = links.filter(function(l) {
+    //         //     return l.source.index == d.index || l.target.index == d.index
+    //         // });
+    //         // d.weight = d.weight.length
+    //         return 10;
+    //     })
+    //     .attr("class", function(d) { // Assign color for "object", "relation", "subject"
+    //         var level; 
+    //         if (d["type"] == "object"){
+    //             level = 1;
+    //         } else if (d["type"] == "subject") {
+    //             level = 2;
+    //         } else {
+    //             level = 3;
+    //         }
+    //         return "level" + level; 
+    //         });
+      
+      
+
+    // // add label
+    // node.append("text")
+    //     .attr("dx", 12)
+    //     .attr("dy", -10)
+    //     .text(function(d) {
+    //         return d["name"]
+    //         })  
+    }
+    
+//>>>>>>> eab5ecd02e103c04e003d0c90f3ebdfd98ae899f
 
 
         }).catch((err) => {
@@ -555,4 +842,4 @@
     </script>
 </body>
 
-</html>
+/html>

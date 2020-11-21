@@ -447,7 +447,8 @@ Promise.all(
         function draw(object_name){
             let parent_div = document.getElementById("filter_tag");
             let button = document.createElement("button");
-            button.innerHTML = object_name;
+            button.innerHTML = "x " + object_name;
+            button.setAttribute("class", "tag-button")
             button.addEventListener("click", function(){
                 button.remove()
                 node_name_list.delete(object_name)

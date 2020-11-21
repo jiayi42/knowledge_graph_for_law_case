@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 <script type="text/javascript" src="../lib/d3.v5.min.js"></script>
 <style>
     path {
@@ -80,6 +81,21 @@
     }
     ul {list-style: none; margin: 0; padding: 0;}
     li {display: inline-block; min-width: 80px; padding: 10px; background-color: #eee; margin: 0;}
+
+    .tag-button {
+        color: #444444;
+        background: #F3F3F3;
+        border: 1px #DADADA solid;
+        padding: 2px 10px;
+        border-radius: 2px;
+        font-weight: bold;
+        font-size: 9pt;
+        outline: none;
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+   
+
 </style>
 
 <body>
@@ -103,7 +119,8 @@
 
     <div>
         <input id="filter_text" type="text" id="objFilter" placeholder="Add object to filter&hellip;">
-        <button id="filter_btn">Filter Object</button>
+        <!-- <button id="filter_btn">Filter Object</button> -->
+        <input id="filter_btn" type="button" value="Filter Object">
         <div class="inline-div" id="filter_tag"></div>
     </div>
     
@@ -111,5 +128,8 @@
     <div id="container1"></div>
     <div id="container2" ; float: "left"></div>
 <script src="knowledge_graph.js"> </script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>

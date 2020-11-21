@@ -352,26 +352,35 @@ Promise.all(
 
 
         function filter_object() {
-            let object_name = document.getElementById('filter_text').value;
+        let object_name = document.getElementById('filter_text').value;
 
-            // new_nodes and new_links are the remaining nodes and links after filtering
-            new_nodes = {}
-            new_links = []
-            links.forEach(function (d) {
-                if (d["source"]["name"] == "Apple" || d["source"]["name"] == "sued April 15") {
-                    new_links.push(d)
-                }
-            })
-            var nodes_keys = Object.keys(nodes);
-            nodes_keys.forEach(function (d) {
-                if (d == "Apple" || d == "sued April 15" || d == "(Samsung)") {
-                    new_nodes[d] = nodes[d]
-                }
-            })
-            console.log(new_links)
-            console.log(new_nodes)
-            console.log(object_name)
-            // console.log(links)
+        // new_nodes and new_links are the remaining nodes and links after filtering
+        new_nodes = {}
+        new_links = []
+
+        // Filter the node !!!!!!!!!!!!!!!!!
+        var node_name_list = new Set()
+        data[0].forEach(function(d){
+            if(d[0][0] == object_name){
+                node_name_list.add(d[0][0])
+                node_name_list.add(d[0][1])
+                node_name_list.add(d[0][2])
+            }
+        })
+        var nodes_keys = Object.keys(nodes);
+        console.log(nodes_keys)
+        nodes_keys.forEach(function(d){
+            if (node_name_list.has(d)){
+                new_nodes[d] = nodes[d]
+            }
+        })
+
+        // Filter the link !!!!!!!!!!!
+        links.forEach(function(d){
+            if (node_name_list.has(d["target"]["name"])){
+                new_links.push(d)
+            }
+        })
 
             // 
             g.remove()
@@ -390,6 +399,23 @@ Promise.all(
 
             draw_from_node_path(new_nodes, new_links)
         }
+        // ###################### add dynamic tag #########################
+        var dataset = [];
+ 
+        function handleClick(event){
+            console.log(document.getElementById("myVal").value)
+            draw(document.getElementById("myVal").value)
+            return false;
+        }
+
+        function draw(val){
+            d3.select("body").select("ul").append("li");
+            dataset.push(val);
+            var p = d3.select("body").selectAll("li")
+            .data(dataset)
+            .text(function(d,i){return i + ": " + d;})
+        }
+        // ##################################################################
     }).catch((err) => {
         console.log(err);
     });

@@ -19,6 +19,7 @@ Promise.all(
         // Use variable "nodes" to store distinct nodes
         var links = [];
         var nodes = {};
+
         var counter = 1;
         data[0].forEach(element => {
             link1 = {};
@@ -50,6 +51,9 @@ Promise.all(
             links.push(link2);
         });
 
+        var backup_links = nodes
+        var backup_nodes = links
+
         // show article
         var x = document.createElement("ARTICLE");
         x.setAttribute("id", "myArticle");
@@ -68,39 +72,6 @@ Promise.all(
 
 
         document.getElementById("filter_btn").onclick = filter_object;
-
-        // Add new data
-        var testElement = [
-            [
-                ["testSrc1111111", "testRlt111111", "testTrt11111"], "testSrctestRlttestTrt", 20
-            ],
-        ]
-        testElement.forEach(element => {
-            link1 = {};
-            link2 = {};
-            link1["source"] = nodes[element[0][0]] || (nodes[element[0][0]] = {
-                "name": element[0][0]
-            });
-            link1["target"] = nodes[element[0][1]] || (nodes[element[0][1]] = {
-                "name": element[0][1]
-            });
-            link1["value"] = 0
-            link2["source"] = nodes[element[0][1]] || (nodes[element[0][1]] = {
-                "name": element[0][1]
-            });
-            link2["target"] = nodes[element[0][2]] || (nodes[element[0][2]] = {
-                "name": element[0][2]
-            });
-            link2["value"] = 1
-            nodes[element[0][1]]["text"] = element[1]
-            nodes[element[0][1]]["line"] = element[2]
-            nodes[element[0][0]]["type"] = "object"
-            nodes[element[0][1]]["type"] = "relation"
-            nodes[element[0][2]]["type"] = "subject"
-            counter++
-            links.push(link1)
-            links.push(link2)
-        });
 
         // Cases Dropdown
         cases = []
@@ -150,43 +121,58 @@ Promise.all(
             var subVal = document.getElementById("subVal").value
             var relVal = document.getElementById("relVal").value
             var objVal = document.getElementById("objVal").value
-            var newNodeList = [
-                [
-                    [subVal, relVal, objVal], subVal + relVal + objVal, newNodeIdx
-                ],
-            ]
-            data[0].push(newNodeList)
 
-            newNodeList.forEach(element => {
-                link1 = {};
-                link2 = {};
-                link1["source"] = nodes[element[0][0]] || (nodes[element[0][0]] = {
-                    "name": element[0][0]
-                });
-                link1["target"] = nodes[element[0][1]] || (nodes[element[0][1]] = {
-                    "name": element[0][1]
-                });
-                link1["value"] = 0
-                link2["source"] = nodes[element[0][1]] || (nodes[element[0][1]] = {
-                    "name": element[0][1]
-                });
-                link2["target"] = nodes[element[0][2]] || (nodes[element[0][2]] = {
-                    "name": element[0][2]
-                });
-                link2["value"] = 1
-                nodes[element[0][1]]["text"] = element[1]
-                nodes[element[0][1]]["line"] = element[2]
-                nodes[element[0][0]]["type"] = "object"
-                nodes[element[0][1]]["type"] = "relation"
-                nodes[element[0][2]]["type"] = "subject"
-                counter++
-                links.push(link1)
-                links.push(link2)
-            });
-            // console.log("After submit data[0]: ", data[0])
+            var nodes_keys = Object.keys(nodes);
+            // nodes_keys.forEach(function(d){
+            //     delete nodes["vx"]
+            //     delete nodes["vy"]
+            //     delete nodes["x"]
+            //     delete nodes["y"]
+            // })
 
+            console.log(subVal, relVal, objVal)
+            var obj = {"name":objVal, "type":"object"}
+            var rel = {"name":relVal, "type":"relation"}
+            var sub = {"name":subVal, "type":"subject"}
+            nodes[objVal] = obj
+            nodes[relVal] = rel
+            nodes[subVal] = sub
+            
+            // links.forEach(function(d){
+            //     delete d["source"]["vx"]
+            //     delete d["source"]["vy"]
+            //     delete d["source"]["x"]
+            //     delete d["source"]["y"]
+            //     delete d["target"]["vx"]
+            //     delete d["target"]["vy"]
+            //     delete d["target"]["x"]
+            //     delete d["target"]["y"]
+            // })
+            
+
+            links.push({"source": obj, "target":rel, "value":0})
+            links.push({"source":rel, "target":sub, "value":1})
+            
+            g.remove()
+            g = svg.append("g")
+            g.append("defs").append("marker")    // This section adds in the arrows
+                .attr("id", "end")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 20)
+                .attr("refY", -1.5)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("class", "arrow")
+                .attr("d", "M0,-5L10,0L0,5");
+            console.log(nodes)
+            console.log(links)
+            draw_from_node_path(nodes, links)
             return false;
         }
+
+        
 
 
         // Configuration data
@@ -214,8 +200,8 @@ Promise.all(
                 .force("y", d3.forceY())
                 .force("charge", d3.forceManyBody().strength(-400))
                 .alphaTarget(1)
-                .on("tick", () => { tick(path, node) });
-
+                .on("tick", () => { tick(path, node) })
+            
             var path = g.append("g")
                 .selectAll("path")
                 .data(links)
@@ -260,7 +246,7 @@ Promise.all(
                 .text(function (d) {
                     return d["name"]
                 })
-
+            
             function dblclick(d) {
                 if (d["type"] == "relation") {
                     document.getElementById("line" + d["line"]).setAttribute("style", "background-color: ");
@@ -301,7 +287,6 @@ Promise.all(
                     d.fy = null;
                 }
             };
-
             return_val = [force, node, path];
             return return_val;
         }
@@ -312,6 +297,8 @@ Promise.all(
         var force = return_val[0];
         var node = return_val[1];
         var path = return_val[2];
+        console.log(nodes)
+        console.log(links)
 
         // Designed the arrow 
         g.append("defs").append("marker")    // This section adds in the arrows
@@ -447,7 +434,7 @@ Promise.all(
         function draw(object_name){
             let parent_div = document.getElementById("filter_tag");
             let button = document.createElement("button");
-            button.innerHTML = "x " + object_name;
+            button.innerHTML = "&times; " + object_name;
             button.setAttribute("class", "tag-button")
             button.addEventListener("click", function(){
                 button.remove()

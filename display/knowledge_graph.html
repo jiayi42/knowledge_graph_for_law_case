@@ -75,6 +75,11 @@
     .graph-svg-component {
         background-color: AliceBlue;
     }
+    .inline-div{
+        display: inline;
+    }
+    ul {list-style: none; margin: 0; padding: 0;}
+    li {display: inline-block; min-width: 80px; padding: 10px; background-color: #eee; margin: 0;}
 </style>
 
 <body>
@@ -99,8 +104,9 @@
     <div>
         <input id="filter_text" type="text" id="objFilter" placeholder="Add object to filter&hellip;">
         <button id="filter_btn">Filter Object</button>
+        <div class="inline-div" id="filter_tag"></div>
     </div>
-
+    
 
     <div id="container1"></div>
     <div id="container2" ; float: "left"></div>

@@ -212,7 +212,7 @@ Promise.all(
                 .force('center', d3.forceCenter(width / 2, height / 2))
                 .force("x", d3.forceX())
                 .force("y", d3.forceY())
-                .force("charge", d3.forceManyBody().strength(-300))
+                .force("charge", d3.forceManyBody().strength(-400))
                 .alphaTarget(1)
                 .on("tick", () => { tick(path, node) });
 
@@ -344,45 +344,39 @@ Promise.all(
             });
         };
 
-
-
-
-
-        var count = 0
-
+        var node_name_list = new Set()
 
         function filter_object() {
-        let object_name = document.getElementById('filter_text').value;
+            let object_name = document.getElementById('filter_text').value;
+            draw(object_name)
+            // new_nodes and new_links are the remaining nodes and links after filtering
+            new_nodes = {}
+            new_links = []
 
-        // new_nodes and new_links are the remaining nodes and links after filtering
-        new_nodes = {}
-        new_links = []
+            // Filter the node !!!!!!!!!!!!!!!!!
+            data[0].forEach(function(d){
+                if(d[0][0] == object_name){
+                    node_name_list.add(d[0][0])
+                    node_name_list.add(d[0][1])
+                    node_name_list.add(d[0][2])
+                }
+            })
+            var nodes_keys = Object.keys(nodes);
+            console.log(nodes_keys)
+            nodes_keys.forEach(function(d){
+                if (node_name_list.has(d)){
+                    new_nodes[d] = nodes[d]
+                }
+            })
 
-        // Filter the node !!!!!!!!!!!!!!!!!
-        var node_name_list = new Set()
-        data[0].forEach(function(d){
-            if(d[0][0] == object_name){
-                node_name_list.add(d[0][0])
-                node_name_list.add(d[0][1])
-                node_name_list.add(d[0][2])
-            }
-        })
-        var nodes_keys = Object.keys(nodes);
-        console.log(nodes_keys)
-        nodes_keys.forEach(function(d){
-            if (node_name_list.has(d)){
-                new_nodes[d] = nodes[d]
-            }
-        })
+            // Filter the link !!!!!!!!!!!
+            links.forEach(function(d){
+                if (node_name_list.has(d["target"]["name"])){
+                    new_links.push(d)
+                }
+            })
 
-        // Filter the link !!!!!!!!!!!
-        links.forEach(function(d){
-            if (node_name_list.has(d["target"]["name"])){
-                new_links.push(d)
-            }
-        })
-
-            // 
+                // 
             g.remove()
             g = svg.append("g")
             g.append("defs").append("marker")    // This section adds in the arrows
@@ -399,21 +393,67 @@ Promise.all(
 
             draw_from_node_path(new_nodes, new_links)
         }
-        // ###################### add dynamic tag #########################
-        var dataset = [];
- 
-        function handleClick(event){
-            console.log(document.getElementById("myVal").value)
-            draw(document.getElementById("myVal").value)
-            return false;
-        }
+        function update_object(object_name) {
+            // new_nodes and new_links are the remaining nodes and links after filtering
+            let new_nodes = {}
+            let new_links = []
+            let delete_name_list = new Set()
 
-        function draw(val){
-            d3.select("body").select("ul").append("li");
-            dataset.push(val);
-            var p = d3.select("body").selectAll("li")
-            .data(dataset)
-            .text(function(d,i){return i + ": " + d;})
+            // Filter the node !!!!!!!!!!!!!!!!!
+            data[0].forEach(function(d){
+                if(d[0][0] == object_name){
+                    delete_name_list.add(d[0][0])
+                    delete_name_list.add(d[0][1])
+                    delete_name_list.add(d[0][2])
+                }
+            })
+            delete_name_list.forEach(function(d){
+                node_name_list.delete(d)
+            })
+            var nodes_keys = Object.keys(nodes);
+            console.log(nodes_keys)
+            nodes_keys.forEach(function(d){
+                if (node_name_list.has(d)){
+                    new_nodes[d] = nodes[d]
+                }
+            })
+
+            // Filter the link !!!!!!!!!!!
+            links.forEach(function(d){
+                if (node_name_list.has(d["target"]["name"])){
+                    new_links.push(d)
+                }
+            })
+
+                // 
+            g.remove()
+            g = svg.append("g")
+            g.append("defs").append("marker")    // This section adds in the arrows
+                .attr("id", "end")
+                .attr("viewBox", "0 -5 10 10")
+                .attr("refX", 20)
+                .attr("refY", -1.5)
+                .attr("markerWidth", 6)
+                .attr("markerHeight", 6)
+                .attr("orient", "auto")
+                .append("path")
+                .attr("class", "arrow")
+                .attr("d", "M0,-5L10,0L0,5");
+
+            draw_from_node_path(new_nodes, new_links)
+        }
+            // ###################### add dynamic tag #########################
+
+        function draw(object_name){
+            let parent_div = document.getElementById("filter_tag");
+            let button = document.createElement("button");
+            button.innerHTML = object_name;
+            button.addEventListener("click", function(){
+                button.remove()
+                node_name_list.delete(object_name)
+                update_object(object_name)
+            })
+            parent_div.appendChild(button)
         }
         // ##################################################################
     }).catch((err) => {

@@ -51,9 +51,6 @@ Promise.all(
             links.push(link2);
         });
 
-        var backup_links = nodes
-        var backup_nodes = links
-
         // show article
         var x = document.createElement("ARTICLE");
         x.setAttribute("id", "myArticle");
@@ -113,8 +110,6 @@ Promise.all(
         });
 
         // Add new node function
-        var newNodeIdx = data[0].length + 1
-        // function addNewNode(event) {
         function addNewNode() {
             // event.preventDefault()
 
@@ -122,51 +117,30 @@ Promise.all(
             var relVal = document.getElementById("relVal").value
             var objVal = document.getElementById("objVal").value
 
-            var nodes_keys = Object.keys(nodes);
-            // nodes_keys.forEach(function(d){
-            //     delete nodes["vx"]
-            //     delete nodes["vy"]
-            //     delete nodes["x"]
-            //     delete nodes["y"]
-            // })
-
             var obj = {"name":objVal, "type":"object"}
             var rel = {"name":relVal, "type":"relation"}
             var sub = {"name":subVal, "type":"subject"}
+
             nodes[objVal] = obj
             nodes[relVal] = rel
             nodes[subVal] = sub
             
-            // links.forEach(function(d){
-            //     delete d["source"]["vx"]
-            //     delete d["source"]["vy"]
-            //     delete d["source"]["x"]
-            //     delete d["source"]["y"]
-            //     delete d["target"]["vx"]
-            //     delete d["target"]["vy"]
-            //     delete d["target"]["x"]
-            //     delete d["target"]["y"]
-            // })
-            
-
             links.push({"source": obj, "target":rel, "value":0})
             links.push({"source":rel, "target":sub, "value":1})
             
             g.remove()
             g = svg.append("g")
-            g.append("defs").append("marker")    // This section adds in the arrows
-                .attr("id", "end")
-                .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 20)
-                .attr("refY", -1.5)
-                .attr("markerWidth", 6)
-                .attr("markerHeight", 6)
-                .attr("orient", "auto")
-                .append("path")
-                .attr("class", "arrow")
-                .attr("d", "M0,-5L10,0L0,5");
-            console.log(nodes)
-            console.log(links)
+            // g.append("defs").append("marker")    // This section adds in the arrows
+            //     .attr("id", "end")
+            //     .attr("viewBox", "0 -5 10 10")
+            //     .attr("refX", 20)
+            //     .attr("refY", -1.5)
+            //     .attr("markerWidth", 6)
+            //     .attr("markerHeight", 6)
+            //     .attr("orient", "auto")
+            //     .append("path")
+            //     .attr("class", "arrow")
+            //     .attr("d", "M0,-5L10,0L0,5");
             draw_from_node_path(nodes, links)
             return false;
         }
@@ -198,27 +172,20 @@ Promise.all(
 
         // ###################################################################################################
         function draw_from_node_path(nodes, links) {
-            // var force = d3.forceSimulation()
-            //     .nodes(d3.values(nodes))
-            //     .force("link", d3.forceLink(links).distance(50))
-            //     .force('center', d3.forceCenter(width / 2, height / 2))
-            //     .force("x", d3.forceX())
-            //     .force("y", d3.forceY())
-            //     .force("charge", d3.forceManyBody().strength(-400))
-            //     .alphaTarget(1)
-            //     .on("tick", () => { tick(path, node) })
-            force.on("tick", () => { tick(path, node) })
             force.nodes(d3.values(nodes))
             force.force("link").links(links)
             force.restart()
-
-            // force.nodes(dataset.nodes)
-            //             simulation.force("link").links(dataset.links)
-            //             simulation.restart();
             
-           
-            
-            console.log(force.nodes())
+            var path = g
+            .selectAll("path")
+            .data(links)
+            .enter()
+            .append("path")
+            .attr("class", function (d) {
+                return "link" + d.value;
+            })
+            .attr("marker-end", "url(#end)");
+                
             var node = g.selectAll(".node")
                 .data(force.nodes())
                 .enter().append("g")
@@ -253,23 +220,13 @@ Promise.all(
                 .text(function (d) {
                     return d["name"]
                 })
-            
-                node.exit().remove()
-                force.nodes(force.nodes())  
-                force.force("link").links(links)
-                force.restart()
+                force.on("tick", () => { tick(path, node) })
+                // node.exit().remove()
+                // force.nodes(force.nodes())  
+                // force.force("link").links(links)
+                // force.restart()
 
-                var path = g
-                .selectAll("path")
-                .data(links)
-                .enter()
-                .append("path")
-                .attr("class", function (d) {
-                    return "link" + d.value;
-                })
-                .attr("marker-end", "url(#end)");
-                    
-            path.exit().remove();
+                
          
             force.alphaTarget(0.3).restart();
 
@@ -313,33 +270,8 @@ Promise.all(
                     d.fy = null;
                 }
             };
-            return_val = [force, node, path];
-            return return_val;
-        }
-        // ###################################################################################################
 
-        var return_val = null;
-        return_val = draw_from_node_path(nodes, links)
-      
-        console.log(nodes)
-        console.log(links)
-
-
-
-        // Designed the arrow 
-        g.append("defs").append("marker")    // This section adds in the arrows
-            .attr("id", "end")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 20)
-            .attr("refY", -1.5)
-            .attr("markerWidth", 6)
-            .attr("markerHeight", 6)
-            .attr("orient", "auto")
-            .append("path")
-            .attr("class", "arrow")
-            .attr("d", "M0,-5L10,0L0,5");
-
-        // add the straight lines
+            // add the straight lines
         function tick(path, node) {
             // let path = g.selectAll("path")
             // let node = g.selectAll(".node")
@@ -359,16 +291,45 @@ Promise.all(
             });
         };
 
+            return_val = [force, node, path];
+            return return_val;
+        }
+        // ###################################################################################################
+
+        var return_val = null;
+        return_val = draw_from_node_path(nodes, links)
+      
+        console.log(nodes)
+        console.log(links)
+
+
+
+        // Designed the arrow 
+        svg.append("defs").append("marker")    // This section adds in the arrows
+            .attr("id", "end")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 20)
+            .attr("refY", -1.5)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("class", "arrow")
+            .attr("d", "M0,-5L10,0L0,5");
+
+        
         var node_name_list = new Set()
 
         function filter_object() {
             let object_name = document.getElementById('filter_text').value;
+            console.log(object_name)
             draw(object_name)
             // new_nodes and new_links are the remaining nodes and links after filtering
             new_nodes = {}
             new_links = []
 
             // Filter the node !!!!!!!!!!!!!!!!!
+
             data[0].forEach(function(d){
                 if(d[0][0] == object_name){
                     node_name_list.add(d[0][0])
@@ -377,7 +338,6 @@ Promise.all(
                 }
             })
             var nodes_keys = Object.keys(nodes);
-            console.log(nodes_keys)
             nodes_keys.forEach(function(d){
                 if (node_name_list.has(d)){
                     new_nodes[d] = nodes[d]
@@ -390,21 +350,21 @@ Promise.all(
                     new_links.push(d)
                 }
             })
-
+            console.log(new_nodes)
                 // 
             g.remove()
             g = svg.append("g")
-            g.append("defs").append("marker")    // This section adds in the arrows
-                .attr("id", "end")
-                .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 20)
-                .attr("refY", -1.5)
-                .attr("markerWidth", 6)
-                .attr("markerHeight", 6)
-                .attr("orient", "auto")
-                .append("path")
-                .attr("class", "arrow")
-                .attr("d", "M0,-5L10,0L0,5");
+            // g.append("defs").append("marker")    // This section adds in the arrows
+            //     .attr("id", "end")
+            //     .attr("viewBox", "0 -5 10 10")
+            //     .attr("refX", 20)
+            //     .attr("refY", -1.5)
+            //     .attr("markerWidth", 6)
+            //     .attr("markerHeight", 6)
+            //     .attr("orient", "auto")
+            //     .append("path")
+            //     .attr("class", "arrow")
+            //     .attr("d", "M0,-5L10,0L0,5");
 
             draw_from_node_path(new_nodes, new_links)
         }
@@ -413,7 +373,6 @@ Promise.all(
             let new_nodes = {}
             let new_links = []
             let delete_name_list = new Set()
-
             // Filter the node !!!!!!!!!!!!!!!!!
             data[0].forEach(function(d){
                 if(d[0][0] == object_name){
@@ -422,11 +381,11 @@ Promise.all(
                     delete_name_list.add(d[0][2])
                 }
             })
+
             delete_name_list.forEach(function(d){
                 node_name_list.delete(d)
             })
             var nodes_keys = Object.keys(nodes);
-            console.log(nodes_keys)
             nodes_keys.forEach(function(d){
                 if (node_name_list.has(d)){
                     new_nodes[d] = nodes[d]
@@ -439,21 +398,10 @@ Promise.all(
                     new_links.push(d)
                 }
             })
-
+            
                 // 
             g.remove()
             g = svg.append("g")
-            g.append("defs").append("marker")    // This section adds in the arrows
-                .attr("id", "end")
-                .attr("viewBox", "0 -5 10 10")
-                .attr("refX", 20)
-                .attr("refY", -1.5)
-                .attr("markerWidth", 6)
-                .attr("markerHeight", 6)
-                .attr("orient", "auto")
-                .append("path")
-                .attr("class", "arrow")
-                .attr("d", "M0,-5L10,0L0,5");
 
             draw_from_node_path(new_nodes, new_links)
         }

@@ -1,12 +1,17 @@
 function createSpan(parentId, text, idx) {
     var parent = document.getElementById(parentId);
-    var span_obj = document.createElement("span");
+    var span_obj = document.createElement("div");
     span_obj.setAttribute("id", "line" + idx);
+    span_obj.setAttribute("class", "inline-div clickable-text");
+    span_obj.onclick = select_line;
     span_obj.innerHTML = text;
     parent.appendChild(span_obj);
 }
 
 
+function select_line(){
+    console.log("GGININDER___")
+}
 
 
 // Promise.all to load multiple data

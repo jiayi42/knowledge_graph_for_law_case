@@ -15,8 +15,8 @@ Promise.all(
         d3.json("file_topic.json"), // file[1]
     ]).then((files) => { // files[n] contains nth file
 
-    console.log("origin", document.getElementById("origin"))
-    console.log("begin")
+    // 
+    console.log("get", sessionStorage.getItem('file_name'))
 
     data = files[0]
 

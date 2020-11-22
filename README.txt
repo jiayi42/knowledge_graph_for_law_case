@@ -1,4 +1,6 @@
-# DESCRIPTION - Describe the package in a few paragraphs
+# DESCRIPTION
+Knowledge graph for law case project - Georgia Tech CSE 6242
+We aim to visualize a law case document to improve the reading experience.
 
 # INSTALLATION - How to install and setup your code
 

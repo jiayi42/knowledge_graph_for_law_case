@@ -47,6 +47,42 @@ We scrape the text data from casetext.com with python library BeautifulSoap and 
 (3) install flask, the environments and package from A. and B.
 
 
+
+## NLP (Backend) part:
+
+### Outline
+#### A. LDA topic clustering in Colab over all files
+#### B. Relation extraction for KG over all files
+#### C. future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
+
+### Important: Please change file paths for your google drive or local computers in code segments due to saving and writing files
+
+### A. LDA topic clustering in Colab over all files
+
+(1) upload LDA_all.ipynb in NLP directory to your google drive.
+(2) upload all legal documents to the same place in a txt format without other txt files.  (we do not offer the files here due to talent issue)
+
+
+### B. Relation extraction for KG over all files
+(1) in your computer, please create a python3.7 environment and install the right version python package in requirement.txt in NLP directory strictly.
+   Or, the following packages
+   spacy==2.1.0
+   networkx==2.5
+   matplotlib==3.3.2
+   pandas==1.1.3
+   neuralcoref==4.0
+   --no-binary neuralcoref
+(2) install other package you may need if you cannot import python package you need (not strictly for version and please do not change the version for strict ones) 
+(3) put all legal documents which are related background part to the same place in a txt format in one directory you wish without other txt files. 
+(we do not offer the files here due to talent issue)
+
+
+### C. Future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
+(1) go to future_upload_deployment directory from our github
+(2) make sure you put new_file.txt(a single file to be appended), file_topic.json, tokenizer.pkl, tokenizer.pkl, and all_files_triples_sentence.json
+(3) install flask, the environments and package from A. and B.
+
+
 # EXECUTION
 ## Data collection:
 ### scrape script (scrape_case_context.py):

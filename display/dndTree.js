@@ -267,7 +267,7 @@ treeJSON = d3.json("file_topic_1120_reverse3_name.json", function(error, treeDat
         updateTempConnector();
         if (draggingNode !== null) {
             update(root);
-            centerNode(draggingNode);
+            initialNode(draggingNode);
             draggingNode = null;
         }
     }
@@ -401,6 +401,23 @@ treeJSON = d3.json("file_topic_1120_reverse3_name.json", function(error, treeDat
             .data(nodes, function(d) {
                 return d.id || (d.id = ++i);
             });
+
+        // // add the link
+        // node
+        //     .append("a")
+        //     .attr("href", function(d) {
+        //         if (d.size) {
+        //             return "knowledge_graph.html?id="+d.name
+        //         }
+        //     })
+        //     .append("rect")
+        //     .attr("x", 100)
+        //     .attr("y", 50)
+        //     .attr("height", 100)
+        //     .attr("width", 200)
+        //     .style("fill", "lightgreen")
+        //     .attr("rx", 10)
+        //     .attr("ry", 10);
 
         // Enter any new nodes at the parent's previous position.
         var nodeEnter = node.enter().append("g")

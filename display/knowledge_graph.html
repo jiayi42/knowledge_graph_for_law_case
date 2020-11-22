@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"crossorigin="anonymous">
 <script type="text/javascript" src="../lib/d3.v5.min.js"></script>
 <style>
     path {
@@ -80,7 +82,7 @@
         display: inline;
     }
     ul {list-style: none; margin: 0; padding: 0;}
-    li {display: inline-block; min-width: 80px; padding: 10px; background-color: #eee; margin: 0;}
+    /*li {display: inline-block; min-width: 80px; padding: 10px; background-color: #eee; margin: 0;}*/
 
     .tag-button {
         color: #444444;
@@ -95,40 +97,54 @@
         margin-right: 2px;
     }
 
-    
-
-   
     h1 {text-align: center;}
 
 </style>
 
 <body>
-    <!-- Dropdown -->
-    <h1>Knowledge graph for law case</h1>
-    <p style="display: inline">Topic: <select id="topic_dropdown"></select> </p>
-    <span style="padding-left:20px">
-        <!-- Add new node  -->
-        <form name="myform" style="display: inline">
-            <input type="text" id="subVal" size="15" placeholder="Add subject&hellip;"> 
-            <input type="text" id="relVal" size="15" placeholder="Add relation&hellip;">
-            <input type="text" id="objVal" size="15" placeholder="Add object&hellip;">
-            <input name="submit" class="tag-button" id="submitNewNodeBtn" type="button" value="Submit">
-        </form>
-
-        <!-- Filter object -->
-        <div style="display: inline">
-            <span style="padding-left:20px">
-                <input id="filter_text" type="text" id="objFilter" size="15" placeholder="Add object to filter&hellip;">
-                <input id="filter_btn" class="tag-button" type="button" value="Filter Object">
-                <div class="inline-div" id="filter_tag"></div>
-            </span>
+    <nav class="navbar navbar-expand-md navbar-dark bg-info">
+        <a class="navbar-brand" href="#">CSE 6242 Team 26</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="topic_tree_3.html">LDA_Tree</a>
+                </li>
+            </ul>
         </div>
-    </span>
+    </nav>
+    <!-- Dropdown -->
+    <div>
+        <h1>Knowledge graph for law case</h1>
+        <p style="display: inline">Topic: <select id="topic_dropdown"></select> </p>
+        <span style="padding-left:20px">
+            <!-- Add new node  -->
+            <form name="myform" style="display: inline">
+                <input type="text" id="subVal" size="15" placeholder="Add subject&hellip;"> 
+                <input type="text" id="relVal" size="15" placeholder="Add relation&hellip;">
+                <input type="text" id="objVal" size="15" placeholder="Add object&hellip;">
+                <input name="submit" class="tag-button" id="submitNewNodeBtn" type="button" value="Submit">
+            </form>
 
-    <p>Case: <select id="cases_dropdown"></select> </p>
+            <!-- Filter object -->
+            <div style="display: inline">
+                <span style="padding-left:20px">
+                    <input id="filter_text" type="text" id="objFilter" size="15" placeholder="Add object to filter&hellip;">
+                    <input id="filter_btn" class="tag-button" type="button" value="Filter Object">
+                    <div class="inline-div" id="filter_tag"></div>
+                </span>
+            </div>
+        </span>
 
-     
-    
+        <p>Case: <select id="cases_dropdown"></select> </p>
+    </div>
     <!-- Display svg -->
     <div id="container1"></div>
 

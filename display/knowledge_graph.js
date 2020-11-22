@@ -26,8 +26,12 @@ Promise.all(
         // console.log("data:", data)
         // "LOUISIANA WHOLESALE v. BAYER AG No. 10-762 (U.S. Dec. 6, 2010).txt" failed
 
-    data = files[2]["3226701 Canada, Inc. v. Qualcomm, Inc., Case No.- 15cv2678-MMA (WVG) (S.D. Cal. Oct. 20, 2017) copy.txt"]
+    // data = files[2]["3226701 Canada, Inc. v. Qualcomm, Inc., Case No.- 15cv2678-MMA (WVG) (S.D. Cal. Oct. 20, 2017) copy.txt"]
+    data = files[2][file_name]
 
+    if (data === undefined) {
+        return;
+    }
 
     // Use variable "links" to store the each relation 
     // Use variable "nodes" to store distinct nodes

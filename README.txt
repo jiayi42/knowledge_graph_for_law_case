@@ -5,21 +5,22 @@ We aim to visualize a law case document to improve the reading experience.
 # INSTALLATION - How to install and setup your code
 
 
-# NLP (Backend) part:
+## NLP (Backend) part:
 
-## Outline
+### Outline
+#### A. LDA topic clustering in Colab over all files
+#### B. Relation extraction for KG over all files
+#### C. future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
+
+### Important: Please change file paths for your google drive or local computers in code segments due to saving and writing files
+
 ### A. LDA topic clustering in Colab over all files
-### B. Relation extraction for KG over all files
-### C. future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
 
-## Important: Please change file paths for your google drive or local computers in code segments due to saving and writing files
-
-## A. LDA topic clustering in Colab over all files
 (1) upload LDA_all.ipynb in NLP directory to your google drive.
 (2) upload all legal documents to the same place in a txt format without other txt files.  (we do not offer the files here due to talent issue)
 
 
-## B. Relation extraction for KG over all files
+### B. Relation extraction for KG over all files
 (1) in your computer, please create a python3.7 environment and install the right version python package in requirement.txt in NLP directory strictly.
    Or, the following packages
    spacy==2.1.0
@@ -33,12 +34,10 @@ We aim to visualize a law case document to improve the reading experience.
 (we do not offer the files here due to talent issue)
 
 
-## C. Future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
+### C. Future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
 (1) go to future_upload_deployment directory from our github
 (2) make sure you put new_file.txt(a single file to be appended), file_topic.json, tokenizer.pkl, tokenizer.pkl, and all_files_triples_sentence.json
 (3) install flask, the environments and package from A. and B.
-
-
 
 
 # EXECUTION
@@ -53,19 +52,19 @@ This tool extract sentence cropped by the back-end in “data/all_files_triples_
 * To add nodes for a sentence in the article: (1) Click the sentence. (2) type in the object, relation, and subject. (3) Click “submit”.
 * Filter/search: (1) Type in target name. (2) Click “Filter Object” (3) Type in new target names if needed. (4) To remove the filtering condition, click the filter tag.
 
-# NLP (Backend) part:
+## NLP (Backend) part:
 
-## Outline
+### Outline
+#### A. LDA topic clustering in Colab over all files
+#### B. Relation extraction for KG over all files
+#### C. future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
+
+### Important: Please change file paths for your google drive or local computers in code segments due to saving and writing files
+
+
 ### A. LDA topic clustering in Colab over all files
-### B. Relation extraction for KG over all files
-### C. future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
 
-## Important: Please change file paths for your google drive or local computers in code segments due to saving and writing files
-
-
-## A. LDA topic clustering in Colab over all files
-
-### Usage:
+#### Usage:
 (1) Run the code segments sequentially (including installation segments)
 (2) please rerun some previous segments if you need to restart variable environments after some package installation
 (3) Run code segments until the  one with a comment "# saving"
@@ -77,15 +76,15 @@ This tool extract sentence cropped by the back-end in “data/all_files_triples_
 (8) Put file_topic_pruning.json in display and run tree_data.py to obtain file_topic_1120_reverse4.json
 (9) Rename file_topic_1120_reverse4.json into lda_tree_names.json
 
-## B. Relation extraction for KG over all files
+### B. Relation extraction for KG over all files
 
-### Usage:
+#### Usage:
 (1) put DVA_NLP_law_KG_V3 in NLP directory into the (3) directory you create and then run it about 4-5 hours (This long time is for processing 1000 documents) 
 (2) You will obtain all_files_triples_sentence.json for (1), (3), and visualization part
 
-## C. Future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
+### C. Future deployment to append a single file into processing json file for LDA and KG. (Optional) as it is not main workflow in our project
 
-### Usage:
+#### Usage:
 (1) run deploy and enter the file name (here is new_file.txt)
 (2) You obtain all_files_triples_sentence.json and file_topic.json with the information from new_file.txt
 (3) Note this experimental part is for flask and our A. B. combination. It is not included in our main workflow

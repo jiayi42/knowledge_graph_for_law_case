@@ -259,17 +259,24 @@ treeJSON = d3.json("file_topic_1120_reverse3_name.json", function(error, treeDat
         });
 
     function endDrag() {
+        console.log("In endDrag")
         selectedNode = null;
         d3.selectAll('.ghostCircle').attr('class', 'ghostCircle');
         d3.select(domNode).attr('class', 'node');
         // now restore the mouseover event or we won't be able to drag a 2nd time
         d3.select(domNode).select('.ghostCircle').attr('pointer-events', '');
         updateTempConnector();
+
+
+        // console.log(draggingNode)
+
         if (draggingNode !== null) {
             update(root);
             centerNode(draggingNode);
+
             draggingNode = null;
         }
+
     }
 
     // Helper functions for collapsing and expanding nodes.
@@ -288,6 +295,7 @@ treeJSON = d3.json("file_topic_1120_reverse3_name.json", function(error, treeDat
             d.children.forEach(expand);
             d._children = null;
         }
+
     }
 
     var overCircle = function(d) {
@@ -362,6 +370,12 @@ treeJSON = d3.json("file_topic_1120_reverse3_name.json", function(error, treeDat
         d = toggleChildren(d);
         update(d);
         initialNode(d);
+
+        // Reach the end
+        if (d.name.endsWith(".txt")) {
+            console.log("capture")
+            window.location = "knowledge_graph.html"; // + "?origin=" + "file_name";
+        }
     }
 
     function update(source) {
@@ -437,7 +451,7 @@ treeJSON = d3.json("file_topic_1120_reverse3_name.json", function(error, treeDat
             .attr('class', 'ghostCircle')
             .attr("r", 30)
             .attr("opacity", 0.2) // change this to zero to hide the target area
-        .style("fill", "red")
+            .style("fill", "red")
             .attr('pointer-events', 'mouseover')
             .on("mouseover", function(node) {
                 overCircle(node);

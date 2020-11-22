@@ -117,7 +117,25 @@
                 <li class="nav-item">
                     <a class="nav-link" href="topic_tree_3.html">LDA_Tree</a>
                 </li>
-            </ul>
+            </ul>    <!-- Dropdown -->
+    <h1>Knowledge graph for law case</h1>
+    <!-- <p style="display: inline">Topic: <select id="topic_dropdown"></select> </p> 
+    <span style="padding-left:20px"> -->
+        <!-- Add new node  -->
+        <form name="myform" style="display: inline">
+            <input type="text" id="subVal" size="15" placeholder="Add subject&hellip;"> 
+            <input type="text" id="relVal" size="15" placeholder="Add relation&hellip;">
+            <input type="text" id="objVal" size="15" placeholder="Add object&hellip;">
+            <input name="submit" class="tag-button" id="submitNewNodeBtn" type="button" value="Submit">
+        </form>
+
+        <!-- Filter object -->
+        <div style="display: inline">
+            <span style="padding-left:20px">
+                <input id="filter_text" type="text" id="objFilter" size="15" placeholder="Add object to filter&hellip;">
+                <input id="filter_btn" class="tag-button" type="button" value="Filter Object">
+                <div class="inline-div" id="filter_tag"></div>
+            </span>
         </div>
     </nav>
     <!-- Dropdown -->
@@ -132,7 +150,6 @@
                 <input type="text" id="objVal" size="15" placeholder="Add object&hellip;">
                 <input name="submit" class="tag-button" id="submitNewNodeBtn" type="button" value="Submit">
             </form>
-
             <!-- Filter object -->
             <div style="display: inline">
                 <span style="padding-left:20px">
@@ -144,7 +161,10 @@
         </span>
 
         <p>Case: <select id="cases_dropdown"></select> </p>
-    </div>
+    </div>    <!--
+    <p>Case: <select id="cases_dropdown"></select> </p>
+    -->
+     
     <!-- Display svg -->
     <div id="container1"></div>
 

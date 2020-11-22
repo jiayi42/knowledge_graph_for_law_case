@@ -11,14 +11,23 @@ function createSpan(parentId, text, idx) {
 
 // Promise.all to load multiple data
 Promise.all(
-    [d3.json("triples_sentence.json"), // file[0]
+    [d3.json("triples_sentence.json"), // file[0] example data
         d3.json("file_topic.json"), // file[1]
+        d3.json("all_files_triples_sentence.json") // file[2]
     ]).then((files) => { // files[n] contains nth file
+
+    // data = files[0]
 
     // 
     console.log("get", sessionStorage.getItem('file_name'))
 
-    data = files[0]
+    var file_name = sessionStorage.getItem('file_name')
+        // console.log(files[2]["3226701 Canada, Inc. v. Qualcomm, Inc., Case No.- 15cv2678-MMA (WVG) (S.D. Cal. Oct. 20, 2017) copy.txt"])
+        // console.log("data:", data)
+        // "LOUISIANA WHOLESALE v. BAYER AG No. 10-762 (U.S. Dec. 6, 2010).txt" failed
+
+    data = files[2]["3226701 Canada, Inc. v. Qualcomm, Inc., Case No.- 15cv2678-MMA (WVG) (S.D. Cal. Oct. 20, 2017) copy.txt"]
+
 
     // Use variable "links" to store the each relation 
     // Use variable "nodes" to store distinct nodes

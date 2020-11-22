@@ -1,17 +1,21 @@
+var lier=0;
+var controller=0;
 function createSpan(parentId, text, idx) {
     var parent = document.getElementById(parentId);
-    var span_obj = document.createElement("div");
+    var span_obj = document.createElement("span");
     span_obj.setAttribute("id", "line" + idx);
-    span_obj.setAttribute("class", "inline-div clickable-text");
-    span_obj.onclick = select_line;
+    span_obj.setAttribute("class", "line-text")
+    span_obj.onclick = function changeContent() {
+ 
+        span_obj.style = "font-weight: bold";
+        lier = idx;
+        controller = 1;
+     }
     span_obj.innerHTML = text;
     parent.appendChild(span_obj);
 }
 
 
-function select_line(){
-    console.log("GGININDER___")
-}
 
 
 // Promise.all to load multiple data
@@ -31,12 +35,8 @@ Promise.all(
         // console.log("data:", data)
         // "LOUISIANA WHOLESALE v. BAYER AG No. 10-762 (U.S. Dec. 6, 2010).txt" failed
 
-    // data = files[2]["3226701 Canada, Inc. v. Qualcomm, Inc., Case No.- 15cv2678-MMA (WVG) (S.D. Cal. Oct. 20, 2017) copy.txt"]
-    data = files[2][file_name]
+    data = files[2]["3226701 Canada, Inc. v. Qualcomm, Inc., Case No.- 15cv2678-MMA (WVG) (S.D. Cal. Oct. 20, 2017) copy.txt"]
 
-    if (data === undefined) {
-        return;
-    }
 
     // Use variable "links" to store the each relation 
     // Use variable "nodes" to store distinct nodes
@@ -90,6 +90,7 @@ Promise.all(
         i++;
     })
 
+    
 
     document.getElementById("filter_btn").onclick = filter_object;
 
@@ -141,7 +142,13 @@ Promise.all(
         var objVal = document.getElementById("objVal").value
 
         var obj = { "name": objVal, "type": "object" }
-        var rel = { "name": relVal, "type": "relation" }
+        if (controller == 1) {
+            var text_line = document.getElementById("line"+lier);
+
+            var rel = { "name": relVal, "type": "relation", "line": lier, "text": text_line.innerHTML};
+        } else {
+            var rel = { "name": relVal, "type": "relation" };
+        }
         var sub = { "name": subVal, "type": "subject" }
 
         nodes[objVal] = obj
@@ -164,6 +171,10 @@ Promise.all(
             //     .append("path")
             //     .attr("class", "arrow")
             //     .attr("d", "M0,-5L10,0L0,5");
+        if (controller == 1){
+            text_line.style.fontWeight = "normal";
+        }
+        controller = 0
         draw_from_node_path(nodes, links)
         return false;
     }

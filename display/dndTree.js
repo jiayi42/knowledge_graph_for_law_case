@@ -374,7 +374,7 @@ treeJSON = d3.json("file_topic_1120_reverse3_name.json", function(error, treeDat
         // Reach the end
         if (d.name.endsWith(".txt")) {
             console.log("capture")
-            window.location = "knowledge_graph.html"; // + "?origin=" + "file_name";
+            window.location = "knowledge_graph.html" + "?origin=" + d.name;
         }
     }
 

@@ -130,7 +130,6 @@ Promise.all(
             //     delete nodes["y"]
             // })
 
-            console.log(subVal, relVal, objVal)
             var obj = {"name":objVal, "type":"object"}
             var rel = {"name":relVal, "type":"relation"}
             var sub = {"name":subVal, "type":"subject"}
@@ -189,29 +188,37 @@ Promise.all(
         svg.call(d3.zoom().on("zoom", function () {
             g.attr("transform", d3.event.transform)
         })).on("dblclick.zoom", null);
-
-        // ###################################################################################################
-        function draw_from_node_path(nodes, links) {
-            var force = d3.forceSimulation()
-                .nodes(d3.values(nodes))
-                .force("link", d3.forceLink(links).distance(50))
+        var force = d3.forceSimulation()
+                .force("link", d3.forceLink().distance(50))
                 .force('center', d3.forceCenter(width / 2, height / 2))
                 .force("x", d3.forceX())
                 .force("y", d3.forceY())
                 .force("charge", d3.forceManyBody().strength(-400))
                 .alphaTarget(1)
-                .on("tick", () => { tick(path, node) })
-            
-            var path = g.append("g")
-                .selectAll("path")
-                .data(links)
-                .enter()
-                .append("path")
-                .attr("class", function (d) {
-                    return "link" + d.value;
-                })
-                .attr("marker-end", "url(#end)");
 
+        // ###################################################################################################
+        function draw_from_node_path(nodes, links) {
+            // var force = d3.forceSimulation()
+            //     .nodes(d3.values(nodes))
+            //     .force("link", d3.forceLink(links).distance(50))
+            //     .force('center', d3.forceCenter(width / 2, height / 2))
+            //     .force("x", d3.forceX())
+            //     .force("y", d3.forceY())
+            //     .force("charge", d3.forceManyBody().strength(-400))
+            //     .alphaTarget(1)
+            //     .on("tick", () => { tick(path, node) })
+            force.on("tick", () => { tick(path, node) })
+            force.nodes(d3.values(nodes))
+            force.force("link").links(links)
+            force.restart()
+
+            // force.nodes(dataset.nodes)
+            //             simulation.force("link").links(dataset.links)
+            //             simulation.restart();
+            
+           
+            
+            console.log(force.nodes())
             var node = g.selectAll(".node")
                 .data(force.nodes())
                 .enter().append("g")
@@ -247,6 +254,25 @@ Promise.all(
                     return d["name"]
                 })
             
+                node.exit().remove()
+                force.nodes(force.nodes())  
+                force.force("link").links(links)
+                force.restart()
+
+                var path = g
+                .selectAll("path")
+                .data(links)
+                .enter()
+                .append("path")
+                .attr("class", function (d) {
+                    return "link" + d.value;
+                })
+                .attr("marker-end", "url(#end)");
+                    
+            path.exit().remove();
+         
+            force.alphaTarget(0.3).restart();
+
             function dblclick(d) {
                 if (d["type"] == "relation") {
                     document.getElementById("line" + d["line"]).setAttribute("style", "background-color: ");
@@ -294,11 +320,11 @@ Promise.all(
 
         var return_val = null;
         return_val = draw_from_node_path(nodes, links)
-        var force = return_val[0];
-        var node = return_val[1];
-        var path = return_val[2];
+      
         console.log(nodes)
         console.log(links)
+
+
 
         // Designed the arrow 
         g.append("defs").append("marker")    // This section adds in the arrows
@@ -315,6 +341,8 @@ Promise.all(
 
         // add the straight lines
         function tick(path, node) {
+            // let path = g.selectAll("path")
+            // let node = g.selectAll(".node")
             path.attr("d", function (d) {
                 var dx = d.target.x - d.source.x,
                     dy = d.target.y - d.source.y,

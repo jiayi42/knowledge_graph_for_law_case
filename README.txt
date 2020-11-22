@@ -16,7 +16,7 @@ This tool extract sentence cropped by the back-end in “data/all_files_triples_
 
 
 
-# NLP readme part:
+# NLP (Backend) part:
 
 ## Outline
 ### A. LDA topic clustering in Colab over all files

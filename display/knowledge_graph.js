@@ -1,16 +1,17 @@
-var lier=0;
-var controller=0;
+var lier = 0;
+var controller = 0;
+
 function createSpan(parentId, text, idx) {
     var parent = document.getElementById(parentId);
     var span_obj = document.createElement("span");
     span_obj.setAttribute("id", "line" + idx);
     span_obj.setAttribute("class", "line-text")
     span_obj.onclick = function changeContent() {
- 
+
         span_obj.style = "font-weight: bold";
         lier = idx;
         controller = 1;
-     }
+    }
     span_obj.innerHTML = text;
     parent.appendChild(span_obj);
 }
@@ -20,9 +21,10 @@ function createSpan(parentId, text, idx) {
 
 // Promise.all to load multiple data
 Promise.all(
-    [d3.json("triples_sentence.json"), // file[0] example data
-        d3.json("file_topic.json"), // file[1]
-        d3.json("all_files_triples_sentence.json") // file[2]
+    [d3.json("data/all_files_triples_sentence.json") //file[0]
+        // , d3.json("example_triples_sentence.json"), // file[1] example data
+        // d3.json("file_topic.json"), // file[2]
+        // d3.json("all_files_triples_sentence.json") // file[]
     ]).then((files) => { // files[n] contains nth file
 
     // data = files[0]
@@ -35,7 +37,7 @@ Promise.all(
         // console.log("data:", data)
         // "LOUISIANA WHOLESALE v. BAYER AG No. 10-762 (U.S. Dec. 6, 2010).txt" failed
 
-    data = files[2][file_name]
+    data = files[0][file_name]
 
 
     // Use variable "links" to store the each relation 
@@ -90,7 +92,7 @@ Promise.all(
         i++;
     })
 
-    
+
 
     document.getElementById("filter_btn").onclick = filter_object;
 
@@ -143,9 +145,9 @@ Promise.all(
 
         var obj = { "name": objVal, "type": "object" }
         if (controller == 1) {
-            var text_line = document.getElementById("line"+lier);
+            var text_line = document.getElementById("line" + lier);
 
-            var rel = { "name": relVal, "type": "relation", "line": lier, "text": text_line.innerHTML};
+            var rel = { "name": relVal, "type": "relation", "line": lier, "text": text_line.innerHTML };
         } else {
             var rel = { "name": relVal, "type": "relation" };
         }
@@ -171,7 +173,7 @@ Promise.all(
             //     .append("path")
             //     .attr("class", "arrow")
             //     .attr("d", "M0,-5L10,0L0,5");
-        if (controller == 1){
+        if (controller == 1) {
             text_line.style.fontWeight = "normal";
         }
         controller = 0

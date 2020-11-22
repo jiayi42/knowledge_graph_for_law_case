@@ -28,7 +28,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 
 // Get JSON data
-treeJSON = d3.json("file_topic_1120_reverse3_name.json", function(error, treeData) {
+treeJSON = d3.json("file_topic_1120_reverse4_name.json", function(error, treeData) {
 
     // Calculate total nodes, max label length
     var totalNodes = 0;
